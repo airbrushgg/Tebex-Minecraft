@@ -3,7 +3,6 @@ package io.tebex.sdk.platform;
 import dev.dejvokep.boostedyaml.YamlDocument;
 import io.tebex.sdk.SDK;
 import io.tebex.sdk.exception.ServerNotFoundException;
-import io.tebex.sdk.exception.ServerNotSetupException;
 import io.tebex.sdk.obj.Category;
 import io.tebex.sdk.obj.QueuedCommand;
 import io.tebex.sdk.obj.QueuedPlayer;
@@ -17,13 +16,11 @@ import io.tebex.sdk.triage.PluginEvent;
 import io.tebex.sdk.util.CommandResult;
 import io.tebex.sdk.util.StringUtil;
 import io.tebex.sdk.util.UUIDUtil;
-import okhttp3.ResponseBody;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
@@ -71,12 +68,12 @@ public interface Platform {
      *
      * @return True if the platform is set up, false otherwise.
      */
-    boolean isSetup();
+    boolean getIsSetup();
 
     /**
      * Sets whether the platform is set up and ready to use.
      */
-    void setSetup(boolean setup);
+    void setIsSetup(boolean setup);
 
     /**
      * Checks if the platform is in online mode.
@@ -91,7 +88,7 @@ public interface Platform {
      * @return Whether the store is a Offline/Geyser type webstore
      */
     default boolean isGeyser() {
-        if (!isSetup()) return false;
+        if (!getIsSetup()) return false;
 
         if (getStoreType() == null || getStoreType().isEmpty()) {
             return false;
@@ -118,11 +115,11 @@ public interface Platform {
 
                 info(String.format("Connected to %s - %s server.", server.getName(), store.getGameType()));
 
-                setSetup(true);
+                setIsSetup(true);
                 configure();
             }).exceptionally(ex -> {
                 Throwable cause = ex.getCause();
-                setSetup(false);
+                setIsSetup(false);
 
                 if (cause instanceof ServerNotFoundException) {
                     warning("Failed to connect your server.", "Please double-check your server key or run the setup command again.");
@@ -162,7 +159,7 @@ public interface Platform {
     }
 
     default void performCheck(boolean runAfter) {
-        if(! isSetup()) return;
+        if(! getIsSetup()) return;
 
         debug("Checking for due players...");
         getQueuedPlayers().clear();
@@ -203,7 +200,7 @@ public interface Platform {
 //    }
 
     default void handleOnlineCommands(QueuedPlayer player) {
-        if(! isSetup()) return;
+        if(! getIsSetup()) return;
 
         debug("Processing online commands for player '" + player.getName() + "'...");
         Object playerId = getPlayerId(player.getName(), UUIDUtil.mojangIdToJavaId(player.getUuid()));
@@ -251,7 +248,7 @@ public interface Platform {
      * @param commands The commands to process.
      */
     default void processOnlineCommands(String playerName, Object playerId, List<QueuedCommand> commands) {
-        if(! isSetup()) return;
+        if(! getIsSetup()) return;
 
         List<Integer> completedCommands = new ArrayList<>();
         boolean hasInventorySpace = true;
@@ -308,7 +305,7 @@ public interface Platform {
     }
 
     default void handleOfflineCommands() {
-        if(! isSetup()) return;
+        if(! getIsSetup()) return;
 
         getSDK().getOfflineCommands().thenAccept(offlineData -> {
             if(offlineData.getCommands().isEmpty()) {

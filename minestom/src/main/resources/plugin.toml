@@ -1,0 +1,5 @@
+id = "tebex"
+name = "Tebex"
+description = "Minestom port of Tebex"
+version = "2.0.6"
+mainClass = "io.tebex.plugin.TebexPlugin"

@@ -33,7 +33,7 @@ public class BanCommand extends SubCommand {
             ip = args[2];
         }
 
-        if (!platform.isSetup()) {
+        if (!platform.getIsSetup()) {
             sender.sendMessage(legacySection().deserialize("§b[Tebex] §7This server is not connected to a webstore. Use /tebex secret to set your store key."));
             return;
         }

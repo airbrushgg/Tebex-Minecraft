@@ -2,8 +2,8 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
     java
-    id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("fabric-loom") version "1.0-SNAPSHOT" apply false
+    id("com.gradleup.shadow") version "8.3.1"
+    id("fabric-loom") version "1.6-SNAPSHOT" apply false
 }
 
 defaultTasks("shadowJar")
@@ -13,12 +13,12 @@ version = "2.0.6"
 
 subprojects {
     plugins.apply("java")
-    plugins.apply("com.github.johnrengelman.shadow")
+    plugins.apply("com.gradleup.shadow")
 
     java {
-        toolchain.languageVersion.set(JavaLanguageVersion.of(8))
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
 
     tasks.named("shadowJar", ShadowJar::class.java) {
@@ -58,17 +58,6 @@ subprojects {
 
         filesNotMatching("**/*.zip") {
             expand(props)
-        }
-    }
-}
-
-val fabricProject = project(":fabric")
-fabricProject.configure<JavaPluginExtension> {
-    sourceSets {
-        getByName("main") {
-            java {
-                srcDir("src/main/kotlin")
-            }
         }
     }
 }

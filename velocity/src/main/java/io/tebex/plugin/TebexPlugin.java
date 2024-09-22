@@ -184,12 +184,12 @@ public class TebexPlugin implements Platform {
     }
 
     @Override
-    public boolean isSetup() {
+    public boolean getIsSetup() {
         return setup;
     }
 
     @Override
-    public void setSetup(boolean setup) {
+    public void setIsSetup(boolean setup) {
         this.setup = setup;
     }
 

@@ -6,6 +6,11 @@ package io.tebex.sdk.platform;
  */
 public enum PlatformType {
     /**
+     * Represents the Minestom server platform.
+     */
+    MINESTOM,
+
+    /**
      * Represents the Bukkit server platform.
      */
     BUKKIT,
