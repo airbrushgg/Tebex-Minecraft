@@ -28,11 +28,6 @@ import kotlin.math.min
 private val config = platform.platformConfig.yamlDocument
 
 fun openBuyGUI(player: Player) {
-    if (player.openInventory != null) {
-        player.sendMessage("<error>You already have an inventory open.".mm())
-        return
-    }
-
     val categories = platform.getStoreCategories()?.filterNotNull()?.sortedBy(Category::getOrder)
 
     if (categories == null) {
